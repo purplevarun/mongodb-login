@@ -1,87 +1,16 @@
-const express = require('express')
-const app = express();
-const mongodb = require('mongodb');
-const bodyparser = require('body-parser');
-const port = process.env.PORT || 3000;
-const MongoClient = mongodb.MongoClient;
-const url = 'mongodb://localhost';
-const dbname = 'db1';
-const collname = 'test';
-const dataInsert = (name,pass,email) => {
-	MongoClient.connect(
-		url,
-		{useNewUrlParser:true,useUnifiedTopology:true},
-	 	(err,client) =>{
-		if (err)
-			return false;
-		console.log('mongo connected');
-		const db = client.db(dbname);
-		var data = {
-			'name' : name,
-			'emailID' : email,
-			'password' : pass 
-		};
-		db.collection (collname).insertOne(data);
-		
-	});
-	return true;
-};
-const dataFind = (email,pass) => {
-	var ans='idk..';
-	MongoClient.connect(
-		url,
-		{useNewUrlParser:true,useUnifiedTopology:true},
-	 	(err,client) =>{
-		if (err)
-			return false;
-		console.log('mongo finding....');
-		const db = client.db(dbname);
-		var data = {
-			'emailID' : email,
-			'password' : pass
-		};
-		var doc = db.collection(collname).findOne();
-		console.log('doc = ',tojson(doc));	
-	});
-	return ans;
-};
+const express = require("express");
+const bodyParser = require("body-parser");
 
-app.use (bodyparser.urlencoded({extended:true}));
-// app.use (express.json());
-app.set ('view engine','ejs');
-app.use (express.static('static'));
-app.get('/',(req,res) => {
-	res.redirect ('/home');
+const app = express();
+
+// PORT
+const PORT = process.env.PORT || 4000;
+
+app.get("/", (req, res) => {
+  res.json({ message: "API Working" });
 });
-app.get('/home', (req,res) => {
-	res.render ('homepage');
-});
-app.get ('/login', (req,res) => {
-	res.render('login');
-});
-app.get('/register', (req,res) => {
-	res.render('register');
-})
-app.post('/register', (req,res) => {
-	var name = req.body.username;
-	var pass = req.body.pass;
-	var email = req.body.emailid;
-	console.log(`Name = ${name}, Password = ${pass}, Email = ${email}`);
-	if (dataInsert(name,pass,email)){
-		res.render('success');
-	}
-	else {
-		res.render('failed');
-	}
-});
-app.post ('/login', (req,res) => {
-	var email = req.body.emailid;
-	var pass = req.body.pass;
-	console.log(email,pass);
-	
-	console.log('returned val = ',dataFind(email,pass));
-	res.redirect('login');
-});
-app.listen(port,() => {
-	console.log('server started on ',port);
+
+
+app.listen(PORT, (req, res) => {
+  console.log(`Server Started at PORT ${PORT}`);
 });
