@@ -54,6 +54,12 @@ app.post('/register', (req,res) => {
 		res.render('failed');
 	}
 });
+app.post ('/login', (req,res) => {
+	var email = req.body.emailid;
+	var pass = req.body.pass;
+	console.log(email,pass);
+	res.redirect('login');
+});
 app.listen(port,() => {
 	console.log('server started on ',port);
 });
