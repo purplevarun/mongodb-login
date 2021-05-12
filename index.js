@@ -48,10 +48,10 @@ app.post('/register', (req,res) => {
 	var email = req.body.emailid;
 	console.log(`Name = ${name}, Password = ${pass}, Email = ${email}`);
 	if (dataInsert(name,pass,email)){
-		res.render('homepage');
+		res.render('success');
 	}
 	else {
-		res.render('register');
+		res.render('failed');
 	}
 });
 app.listen(port,() => {
