@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express();
 const mongodb = require('mongodb');
+const bodyparser = require('body-parser');
 const port = process.env.PORT || 3000;
 const MongoClient = mongodb.MongoClient;
 const url = 'mongodb://localhost';
@@ -11,7 +12,7 @@ const dataInsert = (name,pass,email) => {
 		{useNewUrlParser:true,useUnifiedTopology:true},
 	 	(err,client) =>{
 		if (err)
-			return console.log(err);
+			return false;
 		console.log('mongo connected');
 		const db = client.db(dbname);
 		var data = {
@@ -20,8 +21,13 @@ const dataInsert = (name,pass,email) => {
 			'password' : pass 
 		};
 		db.collection ("test").insertOne(data);
+		
 	});
+	return true;
 };
+// console.log(dataInsert('varun','pepepe','purplevarun'));
+app.use (bodyparser.urlencoded({extended:true}));
+// app.use (express.json());
 app.set ('view engine','ejs');
 app.use (express.static('static'));
 app.get('/',(req,res) => {
@@ -37,7 +43,16 @@ app.get('/register', (req,res) => {
 	res.render('register');
 })
 app.post('/register', (req,res) => {
-
+	var name = req.body.username;
+	var pass = req.body.pass;
+	var email = req.body.emailid;
+	console.log(`Name = ${name}, Password = ${pass}, Email = ${email}`);
+	if (dataInsert(name,pass,email)){
+		res.render('homepage');
+	}
+	else {
+		res.render('register');
+	}
 });
 app.listen(port,() => {
 	console.log('server started on ',port);
