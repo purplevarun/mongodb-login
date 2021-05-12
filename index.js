@@ -27,6 +27,7 @@ const dataInsert = (name,pass,email) => {
 	return true;
 };
 const dataFind = (email,pass) => {
+	var ans='idk..';
 	MongoClient.connect(
 		url,
 		{useNewUrlParser:true,useUnifiedTopology:true},
@@ -39,21 +40,12 @@ const dataFind = (email,pass) => {
 			'emailID' : email,
 			'password' : pass
 		};
-		db.collection(collname).findOne(data)
-		 .then(result =>{
-		 	if (result){
-		 		console.log(result);
-		 		return true;
-		 	}
-		 	else {
-		 		console.log('no user found');
-		 		return false;
-		 	}
-		 })
+		var doc = db.collection(collname).findOne();
+		console.log('doc = ',tojson(doc));	
 	});
-	return false;
+	return ans;
 };
-// console.log(dataInsert('varun','pepepe','purplevarun'));
+
 app.use (bodyparser.urlencoded({extended:true}));
 // app.use (express.json());
 app.set ('view engine','ejs');
@@ -87,7 +79,7 @@ app.post ('/login', (req,res) => {
 	var pass = req.body.pass;
 	console.log(email,pass);
 	
-	console.log(dataFind(email,pass));
+	console.log('returned val = ',dataFind(email,pass));
 	res.redirect('login');
 });
 app.listen(port,() => {
