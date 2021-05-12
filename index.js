@@ -39,12 +39,19 @@ const dataFind = (email,pass) => {
 			'emailID' : email,
 			'password' : pass
 		};
-		if (db.collection.findOne(data)){
-			return 'found';
-		}
-		else return 'not found';
+		db.collection(collname).findOne(data)
+		 .then(result =>{
+		 	if (result){
+		 		console.log(result);
+		 		return true;
+		 	}
+		 	else {
+		 		console.log('no user found');
+		 		return false;
+		 	}
+		 })
 	});
-	return true;
+	return false;
 };
 // console.log(dataInsert('varun','pepepe','purplevarun'));
 app.use (bodyparser.urlencoded({extended:true}));
@@ -79,8 +86,9 @@ app.post ('/login', (req,res) => {
 	var email = req.body.emailid;
 	var pass = req.body.pass;
 	console.log(email,pass);
-	// res.redirect('login');
+	
 	console.log(dataFind(email,pass));
+	res.redirect('login');
 });
 app.listen(port,() => {
 	console.log('server started on ',port);
