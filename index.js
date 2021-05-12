@@ -6,6 +6,7 @@ const port = process.env.PORT || 3000;
 const MongoClient = mongodb.MongoClient;
 const url = 'mongodb://localhost';
 const dbname = 'db1';
+const collname = 'test';
 const dataInsert = (name,pass,email) => {
 	MongoClient.connect(
 		url,
@@ -20,8 +21,28 @@ const dataInsert = (name,pass,email) => {
 			'emailID' : email,
 			'password' : pass 
 		};
-		db.collection ("test").insertOne(data);
+		db.collection (collname).insertOne(data);
 		
+	});
+	return true;
+};
+const dataFind = (email,pass) => {
+	MongoClient.connect(
+		url,
+		{useNewUrlParser:true,useUnifiedTopology:true},
+	 	(err,client) =>{
+		if (err)
+			return false;
+		console.log('mongo finding....');
+		const db = client.db(dbname);
+		var data = {
+			'emailID' : email,
+			'password' : pass
+		};
+		if (db.collection.findOne(data)){
+			return 'found';
+		}
+		else return 'not found';
 	});
 	return true;
 };
@@ -58,7 +79,8 @@ app.post ('/login', (req,res) => {
 	var email = req.body.emailid;
 	var pass = req.body.pass;
 	console.log(email,pass);
-	res.redirect('login');
+	// res.redirect('login');
+	console.log(dataFind(email,pass));
 });
 app.listen(port,() => {
 	console.log('server started on ',port);
