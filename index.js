@@ -57,6 +57,12 @@ app.get ('/welcome', (req,res) => {
 	res.render ('welcome');
 });
 
+app.get ('/login', passport.authenticate('local', {
+	successRedirect: '/secret',
+	failureRedirect: '/login'
+}), (req,res) => {
+});
+
 app.listen(port, () => {
 	console.log ('server hosted at %s',port);
 });
