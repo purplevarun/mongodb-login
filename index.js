@@ -32,12 +32,14 @@ app.use (require ('express-session')({
 app.use (passport.initialize());
 app.use (passport.session());
 
-passport.use (new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deseralizeUser(User.deserializeUser());
+//passport.use (new LocalStrategy(User.authenticate()));
+//passport.serializeUser(User.serializeUser());
+//passport.deseralizeUser(User.deserializeUser());
 
 
 // -----------------------------------------------------------------------------
+
+const port = process.env.PORT || 3000;
 
 app.get ('/', (req,res) => {
 	res.render ('homepage');
@@ -53,4 +55,8 @@ app.get ('/register', (req,res) => {
 
 app.get ('/welcome', (req,res) => {
 	res.render ('welcome');
+});
+
+app.listen(port, () => {
+	console.log ('server hosted at %s',port);
 });
