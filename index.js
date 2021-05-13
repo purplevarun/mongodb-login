@@ -3,7 +3,7 @@ const app = express();
 const bodyparser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const MongoStore = require('connect-mongo')(session);
 const mongoURL = 'mongodb://localhost/login-promject';
 const port = process.env.PORT || 3000;
 
@@ -24,7 +24,7 @@ app.use (session ({
 	secret : 'purplevarun',
 	resave : true,
 	saveUninitialized: false,
-	store : MongoStore.create({
+	store : new MongoStore({
 		mongooseConnection : db
 	})
 }));
@@ -35,5 +35,5 @@ app.use (bodyparser.urlencoded({extended:false}));
 
 
 app.listen(port, () => {
-	console.log('server running on ',port);
+	console.log(`server running on ${port}`);
 });
