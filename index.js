@@ -51,26 +51,29 @@ app.post ('/register', (req,res) => {
 	var counter;
 	User.findOne({}, (err,data)=>{
 		if (data){
+			console.log('if data = ',data);
 			counter = data.uniqueID + 1;
 		}
 		else counter = 1;
-	})
-	var newUser = new User({
-		uniqueID: counter,
-		emailid: info.emailid,
-		username: info.username,
-		password: info.pass
-	});
-
-	newUser.save ((err,user) => {
-		if (err){
-			console.log('there was error in user = ',err);
-			res.render ('result-page',{'result':'Failed'});
-		}
-		else{
-			console.log('user inserted');
-			res.render ('result-page',{'result':'Successful'});
-		} 
+	
+		console.log('counter = ',counter);
+		var newUser = new User({
+			uniqueID: counter,
+			emailid: info.emailid,
+			username: info.username,
+			password: info.pass
+		});
+		console.log('schema = ',newUser);
+		newUser.save ((err,user) => {
+			if (err){
+				console.log('there was error in user = ',err);
+				res.render ('result-page',{'result':'Failed'});
+			}
+			else{
+				console.log('user inserted');
+				res.render ('result-page',{'result':'Successful'});
+			} 
+		});
 	});
 });
 app.get ('/welcome', (req,res) => {
@@ -79,10 +82,11 @@ app.get ('/welcome', (req,res) => {
 })
 app.post ('/login', (req,res) => {
 	var em = req.body.emailid;
-	var pass = req.body.password;
+	var pass = req.body.pass;
 	User.findOne({emailid:em}, (err,data) => {
 		if (data){ // if email present
-			if (data.pass==pass){
+			console.log(`data.pass = ${data.password} and body.pass = ${pass}`);
+			if (data.password==pass){
 				console.log('login success');
 				console.log(data);
 				req.session.userId = data.uniqueID;
