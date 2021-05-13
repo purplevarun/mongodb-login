@@ -35,3 +35,18 @@ app.use (passport.session());
 passport.use (new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deseralizeUser(User.deserializeUser());
+
+
+// -----------------------------------------------------------------------------
+
+app.get ('/', (req,res) => {
+	res.render ('homepage');
+});
+
+app.get ('/login', (req,res) => {
+	res.render ('login');
+});
+
+app.get ('/register', (req,res) => {
+	res.render ('register');
+});
