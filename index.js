@@ -48,7 +48,15 @@ app.get ('/register', (req,res) => {
 app.post ('/register', (req,res) => {
 	console.log(req.body);
 	var info = req.body;
+	var counter;
+	User.findOne({}, (err,data)=>{
+		if (data){
+			counter = data.uniqueID + 1;
+		}
+		else counter = 1;
+	})
 	var newUser = new User({
+		uniqueID: counter,
 		emailid: info.emailid,
 		username: info.username,
 		password: info.pass
@@ -65,7 +73,10 @@ app.post ('/register', (req,res) => {
 		} 
 	});
 });
-
+app.get ('/welcome', (req,res) => {
+	console.log('welcome to welcome');
+	res.render('welcome',{ID:req.session.userId});
+})
 app.post ('/login', (req,res) => {
 	var em = req.body.emailid;
 	var pass = req.body.password;
@@ -74,7 +85,8 @@ app.post ('/login', (req,res) => {
 			if (data.pass==pass){
 				console.log('login success');
 				console.log(data);
-				res.render('welcome');
+				req.session.userId = data.uniqueID;
+				res.redirect('/welcome');
 			}
 			else {
 				res.render('login',{'msg':'Wrong Password..'})
