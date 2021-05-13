@@ -78,8 +78,15 @@ app.post ('/register', (req,res) => {
 });
 app.get ('/welcome', (req,res) => {
 	console.log('welcome to welcome');
-	res.render('welcome',{ID:req.session.userId});
-})
+	User.findOne({uniqueID:req.session.userId}, (err,data) =>{
+		console.log('user data = ',data);
+		if (!data){
+			res.render('result-page',{'result':'There was problem in Login..'});
+		}
+		else 
+			res.render('welcome',{name:data.username,email:data.emailID,password:data.password});	
+	});
+});
 app.post ('/login', (req,res) => {
 	var em = req.body.emailid;
 	var pass = req.body.pass;
