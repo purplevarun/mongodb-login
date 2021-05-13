@@ -6,7 +6,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const mongoURL = 'mongodb://localhost/login-promject';
 const port = process.env.PORT || 3000;
-
+const User = require('models/User');
 mongoose.connect (mongoURL,{
 	useNewUrlParser: true,
 	useUnifiedTopology: true
@@ -43,6 +43,16 @@ app.get ('/login', (req,res) => {
 
 app.get ('/register', (req,res) => {
 	res.render ('register');
+});
+
+app.post ('/register', (req,res,next) => {
+	console.log(req.body);
+	var info = req.body;
+	var newUser = new User({
+		emailid: info.emailid,
+		username: info.username,
+		password: info.password
+	});
 });
 
 app.listen(port, () => {
