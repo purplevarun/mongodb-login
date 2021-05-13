@@ -13,4 +13,9 @@ mongoose.set('useUnifiedTopology',true);
 
 const mongourl = 'mongodb://localhost/db1';
 
-mongoose.connect (mongourl);
+mongoose.connect (mongourl, (err,client) => {
+	if (err)
+		console.log (err);
+	else console.log ('mongo connected');
+});
+
