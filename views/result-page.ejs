@@ -1,0 +1,19 @@
+<style>
+	*{
+		text-align: center;
+	}
+</style>
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) { 
+    	var x = document.getElementById('bobo').innerHTML;
+    	if (x == 'Registration Successful'){
+    		document.getElementById('bobo').style.color = 'green';
+    	}
+    	else 
+    		document.getElementById('bobo').style.color = 'red';
+	});
+</script>
+<h1 id="bobo">Registration <%=result%></h1>
+<a href="/">
+	<h2>Go Back</h2>
+</a>

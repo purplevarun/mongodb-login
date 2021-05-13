@@ -6,7 +6,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const mongoURL = 'mongodb://localhost/login-promject';
 const port = process.env.PORT || 3000;
-const User = require('models/User');
+const User = require('./models/User');
 mongoose.connect (mongoURL,{
 	useNewUrlParser: true,
 	useUnifiedTopology: true
@@ -38,30 +38,53 @@ app.get ('/', (req,res) => {
 });
 
 app.get ('/login', (req,res) => {
-	res.render ('login');
+	res.render ('login',{'msg':''});
 });
 
 app.get ('/register', (req,res) => {
 	res.render ('register');
 });
 
-app.post ('/register', (req,res,next) => {
+app.post ('/register', (req,res) => {
 	console.log(req.body);
 	var info = req.body;
 	var newUser = new User({
 		emailid: info.emailid,
 		username: info.username,
-		password: info.password
+		password: info.pass
 	});
 
 	newUser.save ((err,user) => {
-		if (err)
+		if (err){
 			console.log('there was error in user = ',err);
-		else 
+			res.render ('result-page',{'result':'Failed'});
+		}
+		else{
 			console.log('user inserted');
+			res.render ('result-page',{'result':'Successful'});
+		} 
 	});
 });
 
+app.post ('/login', (req,res) => {
+	var em = req.body.emailid;
+	var pass = req.body.password;
+	User.findOne({emailid:em}, (err,data) => {
+		if (data){ // if email present
+			if (data.pass==pass){
+				console.log('login success');
+				console.log(data);
+				res.render('welcome');
+			}
+			else {
+				res.render('login',{'msg':'Wrong Password..'})
+			}
+		}
+		else { // email not present
+			res.render ('login',{'msg':'Email not found..'});
+		}
+	})
+});
 app.listen(port, () => {
 	console.log(`server running on ${port}`);
 });
