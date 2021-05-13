@@ -53,6 +53,13 @@ app.post ('/register', (req,res,next) => {
 		username: info.username,
 		password: info.password
 	});
+
+	newUser.save ((err,user) => {
+		if (err)
+			console.log('there was error in user = ',err);
+		else 
+			console.log('user inserted');
+	});
 });
 
 app.listen(port, () => {
